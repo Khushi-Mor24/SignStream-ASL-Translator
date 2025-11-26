@@ -1,30 +1,54 @@
-# ASL Hand Sign Recognition (A–Z) with Voice Control and Speech Output
-
-A full **real‑time ASL translator system** that recognizes **hand signs (A–Z + space + delete + nothing)** using MediaPipe + XGBoost and supports:
-
-✔ **Text‑to‑Speech (system speaks your translated text)**
-✔ **Speech‑to‑Text voice commands (clear, speak, stop)**
-✔ **Real‑time webcam detection**
-✔ **Word builder + space + delete gestures**
-✔ **Professional folder structure for evaluation**
-
-This system uses **landmark‑based ML**, not CNN, meaning:
-
-* Extremely fast on CPU
-* Very small model
-* No TensorFlow required
-* Very high accuracy (99.18%)
+# SignStream – Real-Time ASL Translator with Voice-to-Sign Animation  
+### ✨ By: Khushi Mor (B.Tech CSE – AI & ML, Batch 2023–2027)
 
 ---
 
-## ⭐ Features
+## 📌 Overview
 
-* ASL Alphabet Recognition (A–Z)
-* Special signs: `space`, `del`, `nothing`
-* Voice Output (TTS using pyttsx3)
-* Voice Input Commands (STT using SpeechRecognition)
-* Real‑time camera feed with hand‑landmarks
-* High‑accuracy XGBoost model
+**SignStream** is a real-time **ASL (American Sign Language) alphabet translator** that supports **both directions of communication**:
+
+### 🔵 **1. ASL Hand Sign → Text (Webcam)**
+- Detects **A–Z alphabets**, **SPACE**, **DELETE**, **NOTHING**
+- MediaPipe → 21 hand landmarks → 63 numeric features
+- XGBoost classifier (trained on 63,676 landmark samples)
+- Final accuracy: **99.18%**
+- Uses prediction smoothing for high stability
+
+### 🔵 **2. Voice → ASL Sign Animation**
+- User presses **V** and speaks: *“hello”*
+- System converts speech to text
+- Displays animated ASL signs:  
+  **H → E → L → L → O**
+- Shown only in **bottom-right corner** (clean UI)
+- Uses custom images from:
+  ```
+  assets/signs/A.jpg … Z.jpg
+  ```
+
+### 🔵 **3. Text-to-Speech (TTS)**
+- Press **S** → System speaks the built word/sentence
+
+### 🔵 **4. Word & Sentence Builder**
+- Each stable sign is added to a word
+- When “space” sign is shown:
+  - Word is spell-corrected
+  - Added to sentence
+- “del” sign removes last letter
+
+---
+
+## 🌟 Key Features
+
+| Feature | Description |
+|--------|-------------|
+| 🖐 ASL Alphabet Recognition | A–Z + space + delete + nothing |
+| 🎙 Voice-to-Sign | Converts spoken text → sign animations |
+| 🔊 Text-to-Speech | System speaks recognized text |
+| ✏ Word Builder | Auto spell-corrected word creation |
+| 📄 Sentence Builder | Multi-word sentence formation |
+| 🎥 Real-Time Webcam | 21-point Mediapipe Hand landmarks |
+| ⚡ High Accuracy ML | XGBoost classifier @ 99.18% |
+| 🪟 Clean UI | Only single webcam + animation window |
 
 ---
 
@@ -33,92 +57,121 @@ This system uses **landmark‑based ML**, not CNN, meaning:
 ```
 SignStream/
 │
+├── assets/
+│   └── signs/
+│       ├── A.jpg
+│       ├── B.jpg
+│       ├── ...
+│       └── Z.jpg
+│
 ├── data/
-│   ├── raw/                 # 0–28 folders for A–Z, space, del, nothing
-│   ├── processed/           # X.npy, y.npy
-│   └── labels.csv           # class mapping
+│   ├── raw/                 # A–Z, space, del, nothing folders (0–28)
+│   ├── processed/
+│   │   ├── X.npy
+│   │   └── y.npy
+│   └── labels.csv
 │
 ├── models/
-│   └── asl_xgboost.pkl      # trained model
+│   └── asl_xgboost.pkl
 │
 ├── src/
 │   ├── extract_landmarks_asl.py
 │   ├── train_xgboost_asl.py
-│   └── realtime_asl_xgboost_voice.py   # FINAL APP
+│   └── realtime_signstream.py   # FINAL APPLICATION
 │
-├── venv/                     # Python virtual env
-│
+├── venv/
 ├── README.md
 └── requirements.txt
 ```
 
 ---
 
-## 🎬 How It Works
+## 🎬 How the System Works
 
-### **Step 1 — Landmark Extraction**
+### **1. Hand Landmark Extraction**
+- MediaPipe returns **21 hand keypoints**
+- Each has (x, y, z) → **63 numeric features**
+- Normalized per frame
 
-MediaPipe extracts **21 hand landmarks** (x, y, z) → **63 features**.
+### **2. Model Prediction**
+- 63-dimensional feature vector fed to XGBoost
+- Outputs one class from **29 classes**
+- Smoothing applied → single stable prediction
 
-### **Step 2 — Train Model**
+### **3. Building Words**
+- New letter added only when hand becomes “nothing” (ready_for_new_letter)
 
-XGBoost classifier trained on 63,676 samples → **99.18% accuracy**.
+### **4. Voice → Sign Animation**
+- SpeechRecognition converts voice to text
+- For each character:
+  - Image loaded from `assets/signs/<LETTER>.jpg`
+  - Displayed in **bottom-right corner**
+  - Automatically transitions letter-by-letter
 
-### **Step 3 — Real‑Time Recognition**
-
-Camera → Landmarks → Model Prediction → Word Builder.
-
-### **Step 4 — Voice Features**
-
-* **TTS:** System speaks translated text
-* **STT:** Voice commands (speak / clear / stop)
+### **5. Text-to-Speech**
+- Uses offline engine: `pyttsx3`
 
 ---
 
-## ▶️ Run Real‑Time Translator
+## ▶ Run Application
 
-Activate venv:
-
+Activate environment:
 ```
 venv\Scripts\activate
 ```
 
-Run:
+Install dependencies:
+```
+pip install -r requirements.txt
+```
 
+Run:
 ```
 python src/realtime_asl_xgboost_voice.py
 ```
 
-Press **Q** to quit.
+---
+
+## 🎛 Controls
+
+### 🖥 Keyboard Controls
+| Key | Action |
+|-----|--------|
+| **Q** | Quit program |
+| **C** | Clear text |
+| **S** | Speak current text |
+| **V** | Start voice-to-sign mode |
+
+### 🎙 Voice Commands (inside V mode)
+| Command | Action |
+|---------|--------|
+| **hello / any word** | Convert to sign animation |
+| **clear** | Clear text |
+| **speak** | Speak text |
+| **stop / exit** | Quit voice mode |
 
 ---
 
-## 🎮 Controls
+## 📊 Model Performance
 
-### Keyboard
-
-| Key | Action             |
-| --- | ------------------ |
-| Q   | Quit               |
-| C   | Clear text         |
-| S   | Speak text         |
-| V   | Voice command mode |
-
-### Voice Commands
-
-| Command            | Action              |
-| ------------------ | ------------------- |
-| "speak" / "read"   | Speaks current text |
-| "clear" / "delete" | Clears text         |
-| "stop" / "exit"    | Quits program       |
+- **Classifier:** XGBoost  
+- **Accuracy:** **0.9918 (99.18%)**  
+- **Dataset:** 63,676 landmark samples  
+- **Classes:** 29 (A–Z + space + del + nothing)  
 
 ---
 
-## 📈 Model Performance
+## 🔮 Future Enhancements
 
-* Accuracy: **0.9918**
-* Dataset: 63,676 samples
-* Model: XGBoost, 63‑feature landmark vector
+- Word-level sign recognition  
+- Animated sign GIF support  
+- ISL mode (Indian Sign Language)  
+- Sign-to-Speech continuous mode  
+- Mobile app version (TFLite)
 
+---
 
-
+## 👩‍💻 Developer
+**Khushi Mor**  
+B.Tech CSE  
+Batch 2023–2027
