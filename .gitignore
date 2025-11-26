@@ -1,0 +1,28 @@
+# Ignore data
+data/raw/*
+data/processed/*.npy
+
+# Ignore assets
+assets/signs/*
+
+# Ignore models
+*.tflite
+*.h5
+*.onnx
+models/*
+
+# Ignore virtual environment
+venv/
+.env/
+
+# Ignore cache
+__pycache__/
+*.pyc
+*.log
+
+# Ignore camera captured images
+captured_images/*
+frames/*
+
+# Ignore temporary files
+.DS_Store
