@@ -50,6 +50,20 @@
 
 ---
 
+📘 Dataset Used
+
+This project uses the ASL Alphabet Dataset containing A–Z + Space + Delete + Nothing.
+
+🔗 Dataset Link (Kaggle)
+
+https://www.kaggle.com/datasets/grassknoted/asl-alphabet
+
+Download and extract into:
+
+data/raw/
+
+---
+
 ## 📁 Project Structure
 
 ```
