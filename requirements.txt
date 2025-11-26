@@ -1,0 +1,9 @@
+opencv-python
+mediapipe
+xgboost
+numpy
+pandas
+scikit-learn
+pyttsx3
+SpeechRecognition
+pyaudio
