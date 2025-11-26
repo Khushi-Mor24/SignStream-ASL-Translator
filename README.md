@@ -1,6 +1,4 @@
 # SignStream – Real-Time ASL Translator with Voice-to-Sign Animation  
-### ✨ By: Khushi Mor (B.Tech CSE – AI & ML, Batch 2023–2027)
-
 ---
 
 ## 📌 Overview
