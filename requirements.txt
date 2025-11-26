@@ -1,9 +1,10 @@
 opencv-python
-mediapipe
-xgboost
+mediapipe==0.10.20
 numpy
 pandas
 scikit-learn
+xgboost
+joblib
 pyttsx3
 SpeechRecognition
 pyaudio
